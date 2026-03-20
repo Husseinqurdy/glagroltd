@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',       # CORS support
     'glagroapp',
+    'storages',          # kwa SFTP storage
 ]
 
 MIDDLEWARE = [
@@ -99,9 +100,18 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media files (served via subdomain + absolute path)
+# Media files (served via SFTP → cPanel)
+DEFAULT_FILE_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
+
+SFTP_STORAGE_HOST = "ftp.umemeswahili.co.tz"
+SFTP_STORAGE_ROOT = "/home/umemeswa/glagroltd/media"
+SFTP_STORAGE_PARAMS = {
+    "username": "umemeswa",
+    "password": "Hussein0910@",   # password yako ya cPanel
+    "port": 22,
+}
+
 MEDIA_URL = "https://media.umemeswahili.co.tz/"
-MEDIA_ROOT = "/home/umemeswa/glagroltd/media"
 
 # Email settings (Render environment variables recommended)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
