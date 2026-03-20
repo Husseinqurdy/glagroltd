@@ -12,6 +12,6 @@ urlpatterns = [
     path('api/', include('glagroapp.urls')),
 ]
 
-# Serve media files during development and on Render
-if settings.DEBUG or True:  # force serve even if DEBUG=False
+# Serve media files only during local development
+if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

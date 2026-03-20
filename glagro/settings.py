@@ -99,9 +99,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media files (served via subdomain)
+# Media files (served via subdomain + absolute path)
 MEDIA_URL = "https://media.umemeswahili.co.tz/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = "/home/umemeswa/glagroltd/media"
 
 # Email settings (Render environment variables recommended)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
