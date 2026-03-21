@@ -101,9 +101,14 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media files (Supabase Storage)
-SUPABASE_PROJECT_ID = os.environ.get("SUPABASE_PROJECT_ID", "avcjjbymailjmbgwphgy")
-MEDIA_URL = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/media/"
+# Media files (Supabase Storage backend)
+DEFAULT_FILE_STORAGE = "glagroapp.storage_backends.SupabaseStorage"
+
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://avcjibymalijmbgwphgy.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "your-service-role-key")
+SUPABASE_BUCKET = os.environ.get("SUPABASE_BUCKET", "media")
+
+MEDIA_URL = f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_BUCKET}/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # local fallback
 
 # Email settings (Render environment variables recommended)
