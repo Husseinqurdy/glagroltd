@@ -8,7 +8,7 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY WARNING: keep the secret key used in production!
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -25,15 +25,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',       # CORS support
+    'corsheaders',
     'glagroapp',
-    'storages',          # kwa SFTP storage
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # static files kwa production
-    'corsheaders.middleware.CorsMiddleware',       # CORS middleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -63,6 +62,7 @@ WSGI_APPLICATION = 'glagro.wsgi.application'
 
 # Database configuration
 if os.environ.get("USE_SQLITE", "True") == "True":
+    # Local development: SQLite
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -70,13 +70,14 @@ if os.environ.get("USE_SQLITE", "True") == "True":
         }
     }
 else:
+    # Deployment: Render Postgres
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get("DB_NAME"),
-            'USER': os.environ.get("DB_USER"),
-            'PASSWORD': os.environ.get("DB_PASSWORD"),
-            'HOST': os.environ.get("DB_HOST"),
+            'NAME': os.environ.get("DB_NAME", "render_db_name"),
+            'USER': os.environ.get("DB_USER", "render_db_user"),
+            'PASSWORD': os.environ.get("DB_PASSWORD", "render_db_password"),
+            'HOST': os.environ.get("DB_HOST", "render_db_host"),
             'PORT': os.environ.get("DB_PORT", "5432"),
         }
     }
@@ -100,18 +101,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media files (served via SFTP → cPanel)
-DEFAULT_FILE_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
-
-SFTP_STORAGE_HOST = "ftp.umemeswahili.co.tz"
-SFTP_STORAGE_ROOT = "/home/umemeswa/glagroltd/media"
-SFTP_STORAGE_PARAMS = {
-    "username": "umemeswa",
-    "password": "Hussein0910@",   # password yako ya cPanel
-    "port": 22,
-}
-
-MEDIA_URL = "https://media.umemeswahili.co.tz/"
+# Media files (Supabase Storage)
+SUPABASE_PROJECT_ID = os.environ.get("SUPABASE_PROJECT_ID", "avcjjbymailjmbgwphgy")
+MEDIA_URL = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # local fallback
 
 # Email settings (Render environment variables recommended)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
