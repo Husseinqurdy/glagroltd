@@ -8,9 +8,11 @@ from .views import (
     FarmServiceReportViewSet,
     FarmerBlogViewSet, 
     FertilizerViewSet, 
-    FertilizerOrderViewSet, 
+    FertilizerOrderViewSet,
+    LoginView, 
     SeedOrderViewSet, 
-    SeedViewSet
+    SeedViewSet,
+    SignupView
 )
 
 
@@ -28,4 +30,8 @@ router.register(r'farmer-blogs', FarmerBlogViewSet, basename='farmerblog')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('signup/', SignupView.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='login'),
+
+
 ]
