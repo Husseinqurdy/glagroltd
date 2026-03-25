@@ -89,9 +89,9 @@ class FarmerBlogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class SignupSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
+    username = serializers.CharField() 
 
     class Meta:
         model = User
@@ -99,12 +99,6 @@ class SignupSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
-
-    def validate_username(self, value):
-        
-        if len(value.strip()) == 0:
-            raise ValidationError("Username cannot be empty")
-        return value
 
     def validate(self, data):
         if data['password'] != data['confirm_password']:
@@ -119,6 +113,7 @@ class SignupSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
 
 
 
