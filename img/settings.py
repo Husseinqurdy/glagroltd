@@ -3,13 +3,14 @@ from decouple import config
 import os
 import dj_database_url
 from dotenv import load_dotenv
+import cloudinary
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = 'django-insecure-u@z-gt_kk&nxg76eolk@c4hda4#^7ro257@2&v$dp^bz2izw9$'
+SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-secret-key")
 DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # important for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,13 +64,9 @@ WSGI_APPLICATION = 'img.wsgi.application'
 
 # DATABASE
 DATABASE_URL = os.getenv('DATABASE_URL')
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default=DATABASE_URL, conn_max_age=600
-    )
-    }
-
+    'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+}
 
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
@@ -86,27 +84,23 @@ USE_TZ = True
 
 # STATIC FILES
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# ⚠️ Usitumie STATICFILES_DIRS kwenye Render isipokuwa una extra static folder
+# STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# ❌ MEDIA_ROOT haitumiki na Cloudinary (optional kuacha)
+# MEDIA FILES (Cloudinary)
 MEDIA_URL = '/media/'
-
-# 🔥 CLOUDINARY CONFIG (HII NDIO MUHIMU)
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-
-# 🔥 OPTIONAL (INAHAKIKISHA 100%)
-import cloudinary
-
+# CLOUDINARY CONFIG
 cloudinary.config(
-    cloud_name= os.getenv('CLOUDINARY_CLOUD_NAME'),
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
     api_key=os.getenv('CLOUDINARY_API_KEY'),
     api_secret=os.getenv('CLOUDINARY_API_SECRET'),
 )
