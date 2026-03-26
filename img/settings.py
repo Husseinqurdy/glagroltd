@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'corsheaders',
     'cloudinary_storage',
     'cloudinary',
 
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # important for static files
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -106,3 +107,17 @@ cloudinary.config(
 )
 
 print(os.getenv('CLOUDINARY_CLOUD_NAME'))
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    # "https://your-frontend-domain.com",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
