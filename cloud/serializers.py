@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
+import uuid
 
 
 from .models import (
@@ -133,4 +134,31 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid email or password")
 
         data['user'] = user
+        return data
+
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate(self, data):
+        user = User.objects.filter(email=data['email']).first()
+        if not user:
+            raise serializers.ValidationError("No account found with this email")
+        # Generate token (simple example)
+        data['reset_token'] = str(uuid.uuid4())
+        data['user'] = user
+        return data
+
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match")
+        # Kwa sasa tunakubali token yoyote (demo). Production: hifadhi token kwenye DB.
         return data

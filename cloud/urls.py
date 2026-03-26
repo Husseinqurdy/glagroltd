@@ -9,7 +9,9 @@ from .views import (
     FarmerBlogViewSet, 
     FertilizerViewSet, 
     FertilizerOrderViewSet,
-    LoginView, 
+    ForgotPasswordView,
+    LoginView,
+    ResetPasswordView, 
     SeedOrderViewSet, 
     SeedViewSet,
     SignupView
@@ -32,6 +34,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('signup/', SignupView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
-
+    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
+    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
 
 ]
