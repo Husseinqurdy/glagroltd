@@ -13,7 +13,8 @@ from .models import (
     FarmServiceReport,
     FarmerBlog,
     Fertilizer, 
-    FertilizerOrder, 
+    FertilizerOrder,
+    PasswordResetToken, 
     Seed, 
     SeedOrder
 )
@@ -145,10 +146,11 @@ class ForgotPasswordSerializer(serializers.Serializer):
         user = User.objects.filter(email=data['email']).first()
         if not user:
             raise serializers.ValidationError("No account found with this email")
-        # Generate token (simple example)
-        data['reset_token'] = str(uuid.uuid4())
-        data['user'] = user
+        token = str(uuid.uuid4())
+        PasswordResetToken.objects.create(user=user, token=token)
+        data['reset_token'] = token
         return data
+
 
 
 

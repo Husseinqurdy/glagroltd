@@ -13,7 +13,8 @@ from .models import (
     FarmServiceReport,
     FarmerBlog,
     Fertilizer, 
-    FertilizerOrder, 
+    FertilizerOrder,
+    PasswordResetToken, 
     Seed,
     SeedOrder
 )
@@ -67,7 +68,6 @@ class ForgotPasswordView(APIView):
 
 
 
-
 class ResetPasswordView(APIView):
     def post(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
@@ -75,19 +75,20 @@ class ResetPasswordView(APIView):
             token = serializer.validated_data['token']
             new_password = serializer.validated_data['new_password']
 
-            # Demo: tafuta user kwa token (kwa sasa tunatumia email au token ya demo)
-            # Production: hifadhi token kwenye DB na uhusishe na user
-            user = User.objects.filter(email="user@example.com").first()  # mfano tu
+            reset_entry = PasswordResetToken.objects.filter(token=token).first()
+            if not reset_entry:
+                return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
-            if user:
-                user.set_password(new_password)  # hashing sahihi
-                user.save()
-                return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
+            user = reset_entry.user
+            user.set_password(new_password)
+            user.save()
 
-            return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            reset_entry.delete()
+
+            return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class FertilizerViewSet(viewsets.ModelViewSet):
