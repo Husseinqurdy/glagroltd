@@ -67,12 +67,27 @@ class ForgotPasswordView(APIView):
 
 
 
+
 class ResetPasswordView(APIView):
     def post(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
-            return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
+            token = serializer.validated_data['token']
+            new_password = serializer.validated_data['new_password']
+
+            # Demo: tafuta user kwa token (kwa sasa tunatumia email au token ya demo)
+            # Production: hifadhi token kwenye DB na uhusishe na user
+            user = User.objects.filter(email="user@example.com").first()  # mfano tu
+
+            if user:
+                user.set_password(new_password)  # hashing sahihi
+                user.save()
+                return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
+
+            return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class FertilizerViewSet(viewsets.ModelViewSet):
