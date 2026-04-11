@@ -110,7 +110,7 @@ print(os.getenv('CLOUDINARY_CLOUD_NAME'))
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    # "https://your-frontend-domain.com",
+    "https://glagro.netlify.app/#services",
 ]
 CORS_ALLOW_HEADERS = [
     "accept",
