@@ -26,7 +26,7 @@ class FertilizerSerializer(serializers.ModelSerializer):
 
 
 class FertilizerOrderSerializer(serializers.ModelSerializer):
-    fertilizer_name = serializers.CharField(source="fertilizer.name", read_only=True)
+    fertilizer = serializers.StringRelatedField()
 
     class Meta:
         model = FertilizerOrder
@@ -65,6 +65,7 @@ class FarmServiceReportSerializer(serializers.ModelSerializer):
 
 
 class FarmServiceOrderSerializer(serializers.ModelSerializer):
+    service = serializers.StringRelatedField()
     class Meta:
         model = FarmServiceOrder
         fields = '__all__'
@@ -80,6 +81,7 @@ class ExpertConsultationSerializer(serializers.ModelSerializer):
 
 
 class ConsultationOrderSerializer(serializers.ModelSerializer):
+    consultation = serializers.StringRelatedField()
     class Meta:
         model = ConsultationOrder
         fields = '__all__'
