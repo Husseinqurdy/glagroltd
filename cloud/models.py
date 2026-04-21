@@ -23,7 +23,6 @@ class Fertilizer(models.Model):
     def __str__(self):
         return self.name
 
-
 class FertilizerOrder(models.Model):
     fertilizer = models.ForeignKey(Fertilizer, on_delete=models.CASCADE, related_name="orders")
     customer_name = models.CharField(max_length=100)
@@ -32,6 +31,11 @@ class FertilizerOrder(models.Model):
     quantity = models.PositiveIntegerField()
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[('unread', 'Unread'), ('read', 'Read')],
+        default='unread'
+    )
 
     def __str__(self):
         return f"Order of {self.quantity} {self.fertilizer.name} by {self.customer_name}"
@@ -56,7 +60,11 @@ class SeedOrder(models.Model):
     customer_phone = models.CharField(max_length=20)
     location = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    status = models.CharField(
+        max_length=20,
+        choices=[('unread', 'Unread'), ('read', 'Read')],
+        default='unread'
+    )
     def __str__(self):
         return f"Order by {self.customer_name} - {self.seed.name} ({self.location})"
 
@@ -93,7 +101,12 @@ class FarmServiceOrder(models.Model):
     farmer_phone = models.CharField(max_length=20)
     location = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    status = models.CharField(
+        max_length=20,
+        choices=[('unread', 'Unread'), ('read', 'Read')],
+        default='unread'
+    )
+    
     def __str__(self):
         return f"Order by {self.farmer_name} - {self.service.service_name} ({self.location})"
 
@@ -116,7 +129,12 @@ class ConsultationOrder(models.Model):
     location = models.CharField(max_length=200)
     question = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
+    status = models.CharField(
+        max_length=20,
+        choices=[('unread', 'Unread'), ('read', 'Read')],
+        default='unread'
+    )
+    
     def __str__(self):
         return f"Consultation: {self.farmer_name} - {self.consultation.topic}"
 

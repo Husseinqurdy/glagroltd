@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -94,11 +94,14 @@ class ResetPasswordView(APIView):
 class FertilizerViewSet(viewsets.ModelViewSet):
     queryset = Fertilizer.objects.all()
     serializer_class = FertilizerSerializer
-
+    
 
 class FertilizerOrderViewSet(viewsets.ModelViewSet):
     queryset = FertilizerOrder.objects.all()
     serializer_class = FertilizerOrderSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['fertilizer', 'customer_name', 'phone_number']
+
 
 
 class SeedViewSet(viewsets.ModelViewSet):
@@ -110,6 +113,8 @@ class SeedViewSet(viewsets.ModelViewSet):
 class SeedOrderViewSet(viewsets.ModelViewSet):
     queryset = SeedOrder.objects.all()
     serializer_class = SeedOrderSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['seed', 'customer_name', 'customer_phone']
 
 
 class FarmManagementServiceViewSet(viewsets.ModelViewSet):
@@ -125,12 +130,17 @@ class FarmServiceReportViewSet(viewsets.ModelViewSet):
 class FarmServiceOrderViewSet(viewsets.ModelViewSet):
     queryset = FarmServiceOrder.objects.all()
     serializer_class = FarmServiceOrderSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['service', 'farmer_name', 'farmer_phone']
 
 
 
 class ExpertConsultationViewSet(viewsets.ModelViewSet):
     queryset = ExpertConsultation.objects.all()
     serializer_class = ExpertConsultationSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['topic', 'customer_name', 'phone_number']
+
 
 
 class ConsultationOrderViewSet(viewsets.ModelViewSet):
