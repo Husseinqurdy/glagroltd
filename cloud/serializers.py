@@ -42,6 +42,8 @@ class SeedSerializer(serializers.ModelSerializer):
 
 
 class SeedOrderSerializer(serializers.ModelSerializer):
+    seed = serializers.StringRelatedField() 
+    
     class Meta:
         model = SeedOrder
         fields = '__all__'
