@@ -100,7 +100,7 @@ class FertilizerOrderViewSet(viewsets.ModelViewSet):
     queryset = FertilizerOrder.objects.all()
     serializer_class = FertilizerOrderSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['fertilizer', 'customer_name', 'phone_number']
+    search_fields = ['fertilizer__name', 'customer_name', 'phone_number']
 
 
 
@@ -114,7 +114,7 @@ class SeedOrderViewSet(viewsets.ModelViewSet):
     queryset = SeedOrder.objects.all()
     serializer_class = SeedOrderSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['seed', 'customer_name', 'customer_phone']
+    search_fields = ['seed__name', 'customer_name', 'customer_phone']
 
 
 class FarmManagementServiceViewSet(viewsets.ModelViewSet):
@@ -131,24 +131,23 @@ class FarmServiceOrderViewSet(viewsets.ModelViewSet):
     queryset = FarmServiceOrder.objects.all()
     serializer_class = FarmServiceOrderSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['service', 'farmer_name', 'farmer_phone']
+    search_fields = ['service__service_name', 'farmer_name', 'farmer_phone']
 
 
 
 class ExpertConsultationViewSet(viewsets.ModelViewSet):
     queryset = ExpertConsultation.objects.all()
     serializer_class = ExpertConsultationSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['topic', 'customer_name', 'phone_number']
-
-
-
+    
 class ConsultationOrderViewSet(viewsets.ModelViewSet):
     queryset = ConsultationOrder.objects.all()
     serializer_class = ConsultationOrderSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['consultation__topic', 'farmer_name', 'farmer_phone']
 
 
 
 class FarmerBlogViewSet(viewsets.ModelViewSet):
     queryset = FarmerBlog.objects.all().order_by('-created_at')
     serializer_class = FarmerBlogSerializer
+    
